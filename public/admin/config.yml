@@ -117,6 +117,10 @@ collections:
     format: yaml-frontmatter
     create: true
     slug: "{{fields._slug}}"
+    # No side-by-side preview: the write-up is long, and dropping the pane gives
+    # the editor the full width. Toggle it back on per session from the editor.
+    editor:
+      preview: false
     sortable_fields:
       fields: [date, title]
       default:
@@ -171,7 +175,6 @@ collections:
         label: Write-up
         widget: markdown
         modes: [raw, rich_text]
-        hint: Raw markdown by default — the Synthetic Image Detection write-up contains hand-written HTML that rich text would rewrite. Switch modes with the selector for a plain post.
 
   # ---------------------------------------------------------------------------
   # Tips — one per month, src/content/tips/YYYY-MM.md
