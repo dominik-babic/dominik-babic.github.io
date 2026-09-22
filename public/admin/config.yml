@@ -1,0 +1,442 @@
+# Sveltia CMS — https://sveltiacms.app
+#
+# Local editing (no auth, no proxy): `npm run dev`, open
+# http://localhost:4321/admin/ in Chrome or Edge and pick "Work with Local
+# Repository". Nothing is committed for you — review and push with git.
+#
+# Remote editing: "Sign In with Token" using a GitHub PAT with repo access.
+# Saves commit straight to `main`, which triggers the Pages deploy workflow.
+
+backend:
+  name: github
+  repo: dominik-babic/dominik-babic.github.io
+  branch: main
+
+# Uploads that do not belong to a single entry (CV, downloads). Per-collection
+# media folders below keep entry images next to the entry instead.
+media_folder: public/assets
+public_folder: /assets
+
+output:
+  # Astro's Zod schemas expect absent optional fields, not "" / [] / null.
+  omit_empty_optional_fields: true
+  yaml:
+    # Quote every string on write. Without this, YAML re-types unquoted scalars
+    # on read — "2026-10-18" comes back as a Date, "1984" as a number — and the
+    # content schemas reject them. Only strings are quoted; booleans and
+    # numbers keep their own types.
+    quote: double
+
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  # ---------------------------------------------------------------------------
+  # Blog — src/content/blog/<slug>/index.md, images in <slug>/img/
+  # ---------------------------------------------------------------------------
+  - name: blog
+    label: Blog
+    label_singular: Post
+    description: The section decides whether a post appears on /blog/tech or /blog/personal.
+    folder: src/content/blog
+    path: "{{slug}}/index"
+    media_folder: img
+    public_folder: ./img
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    slug: "{{fields._slug}}"
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    view_groups:
+      - label: Section
+        field: type
+    fields:
+      - name: title
+        label: Title
+        widget: string
+      - name: date
+        label: Date
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        format: YYYY-MM-DD
+        picker_utc: true
+      - name: type
+        label: Section
+        widget: select
+        default: tech
+        options:
+          - { label: Tech, value: tech }
+          - { label: Personal, value: personal }
+      - name: description
+        label: Description
+        widget: text
+        hint: "One or two lines. Shown on index pages and used as the RSS summary. Supports **bold**, *italic*, `code` and [links](url)."
+      - name: tags
+        label: Tags
+        widget: relation
+        collection: tags
+        value_field: name
+        display_fields: [name]
+        search_fields: [name]
+        multiple: true
+        required: false
+        hint: Topics only — the section is set above. Pick from the shared pool, or use Add to create a new tag.
+      - name: featured
+        label: Feature on the home page
+        widget: boolean
+        default: false
+        required: false
+      - name: image
+        label: Preview image
+        widget: image
+        required: false
+        hint: Optional thumbnail shown next to the post in list views.
+      - name: body
+        label: Body
+        widget: markdown
+        modes: [rich_text, raw]
+        hint: Switch to raw markdown with the mode selector when you need exact control — two images on one line render side by side, with a following italic line as their caption.
+
+  # ---------------------------------------------------------------------------
+  # Projects — src/content/projects/<slug>/index.md, images in <slug>/img/
+  # ---------------------------------------------------------------------------
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: src/content/projects
+    path: "{{slug}}/index"
+    media_folder: img
+    public_folder: ./img
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    slug: "{{fields._slug}}"
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    fields:
+      - name: title
+        label: Title
+        widget: string
+      - name: date
+        label: Date
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        format: YYYY-MM-DD
+        picker_utc: true
+      - name: description
+        label: Description
+        widget: text
+        hint: "Shown on the projects index and the home page. Supports **bold**, *italic*, `code` and [links](url)."
+      - name: tags
+        label: Tags
+        widget: relation
+        collection: tags
+        value_field: name
+        display_fields: [name]
+        search_fields: [name]
+        multiple: true
+        required: false
+        hint: Pick from the shared pool, or use Add to create a tag that every post and project can then use.
+      - name: github
+        label: Source repository
+        widget: string
+        required: false
+        pattern: ['^https?://', Must be a full URL starting with http(s)://]
+      - name: featured
+        label: Feature on the home page
+        widget: boolean
+        default: false
+        required: false
+      - name: hasDetailPage
+        label: Link to the write-up
+        widget: boolean
+        default: false
+        required: false
+        hint: Off means the card shows the description and source link only. The page is built either way.
+      - name: image
+        label: Preview image
+        widget: image
+        required: false
+      - name: body
+        label: Write-up
+        widget: markdown
+        modes: [raw, rich_text]
+        hint: Raw markdown by default — the Synthetic Image Detection write-up contains hand-written HTML that rich text would rewrite. Switch modes with the selector for a plain post.
+
+  # ---------------------------------------------------------------------------
+  # Tips — one per month, src/content/tips/YYYY-MM.md
+  # ---------------------------------------------------------------------------
+  - name: tips
+    label: Tips
+    label_singular: Tip
+    description: The tip whose date falls in the current month is shown on the home page. CI rebuilds monthly so it rotates on its own.
+    folder: src/content/tips
+    media_folder: img
+    public_folder: ./img
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    slug: "{{year}}-{{month}}"
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    view_filters:
+      - label: Scheduled
+        field: date
+        gte: "{{today}}"
+    fields:
+      - name: title
+        label: Title
+        widget: string
+      - name: date
+        label: Month
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        format: YYYY-MM-DD
+        picker_utc: true
+        hint: Use the first of the month — the filename and the home-page slot both follow this date.
+      - name: category
+        label: Category
+        widget: select
+        options: [Tech, Running, Research]
+      - name: summary
+        label: Summary
+        widget: text
+        hint: "The part shown on the home page. Supports **bold**, *italic*, `code` and [links](url)."
+      - name: body
+        label: Body
+        widget: markdown
+        modes: [rich_text, raw]
+
+  # ---------------------------------------------------------------------------
+  # Tags — the vocabulary shared by blog posts and projects. One file per tag.
+  # Nothing reads these at build time; they exist so the tag fields above can
+  # offer every tag already in use and create new ones inline.
+  # ---------------------------------------------------------------------------
+  - name: tags
+    label: Tags
+    label_singular: Tag
+    description: Shared by blog posts and projects. Renaming a tag here updates every entry that uses it; the filter chips on the site are built from the tags each page actually uses.
+    folder: src/data/tags
+    extension: yml
+    format: yml
+    create: true
+    identifier_field: name
+    slug: "{{name}}"
+    sortable_fields:
+      fields: [name]
+      default:
+        field: name
+        direction: ascending
+    fields:
+      - name: name
+        label: Name
+        widget: string
+        hint: Shown exactly as written in the filter chips, so mind the capitalisation.
+
+  # ---------------------------------------------------------------------------
+  # About pages — src/data/about.yaml
+  # ---------------------------------------------------------------------------
+  - name: pages
+    label: Pages
+    files:
+      - name: about
+        label: About
+        file: src/data/about.yaml
+        format: yaml
+        description: Copy for /about/tech and /about/personal. Section headings and the contact buttons live in the page markup.
+        fields:
+          - name: tech
+            label: Tech side
+            widget: object
+            fields:
+              - name: tagline
+                label: Tagline
+                widget: string
+              - name: intro
+                label: Intro paragraphs
+                widget: list
+                field: { name: paragraph, label: Paragraph, widget: text }
+              - name: education
+                label: Education
+                widget: list
+                summary: "{{fields.title}} — {{fields.organisation}}"
+                fields:
+                  - { name: title, label: Degree, widget: string }
+                  - { name: organisation, label: Institution, widget: string }
+                  - { name: subtitle, label: Specialisation, widget: string, required: false }
+                  - { name: description, label: Description, widget: text, required: false }
+                  - name: list
+                    label: Bullet points
+                    widget: list
+                    required: false
+                    field: { name: point, label: Point, widget: text }
+                  - { name: startDate, label: From, widget: string, hint: "Year, e.g. 2023" }
+                  - { name: endDate, label: To, widget: string, hint: "Year, or \"now\"" }
+              - name: experience
+                label: Experience
+                widget: list
+                summary: "{{fields.title}} — {{fields.organisation}}"
+                fields:
+                  - { name: title, label: Role, widget: string }
+                  - { name: organisation, label: Employer, widget: string }
+                  - { name: subtitle, label: Team or focus, widget: string, required: false }
+                  - { name: description, label: Description, widget: text, required: false }
+                  - name: list
+                    label: Bullet points
+                    widget: list
+                    required: false
+                    field: { name: point, label: Point, widget: text }
+                  - { name: startDate, label: From, widget: string }
+                  - { name: endDate, label: To, widget: string }
+              - name: skills
+                label: Skills
+                widget: object
+                fields:
+                  - name: focus
+                    label: Focus
+                    widget: list
+                    field: { name: item, label: Item, widget: string }
+                  - name: toolbox
+                    label: Toolbox
+                    widget: list
+                    field: { name: item, label: Item, widget: string }
+              - name: contact
+                label: Contact intro
+                widget: text
+          - name: personal
+            label: Personal side
+            widget: object
+            fields:
+              - name: tagline
+                label: Tagline
+                widget: string
+              - name: intro
+                label: Intro paragraphs
+                widget: list
+                field: { name: paragraph, label: Paragraph, widget: text }
+              - name: hobbies
+                label: Hobbies
+                widget: list
+                required: false
+                summary: "{{fields.title}}"
+                fields:
+                  - { name: title, label: Title, widget: string }
+                  - name: text
+                    label: Text
+                    widget: text
+                    required: false
+                    hint: "Optional. Supports **bold**, *italic*, `code` and [links](url)."
+              - name: races
+                label: Races
+                widget: object
+                required: false
+                fields:
+                  - name: intro
+                    label: Intro
+                    widget: text
+                    required: false
+                    hint: "Optional line above the table. Supports **bold**, *italic*, `code` and [links](url)."
+                  - name: upcoming
+                    label: Upcoming races
+                    widget: list
+                    required: false
+                    summary: "{{fields.display}} — {{fields.event}}"
+                    hint: Races drop off the page automatically once they are over.
+                    fields:
+                      - name: date
+                        label: Date
+                        widget: datetime
+                        date_format: YYYY-MM-DD
+                        time_format: false
+                        format: YYYY-MM-DD
+                        picker_utc: true
+                      - name: endDate
+                        label: End date
+                        widget: datetime
+                        date_format: YYYY-MM-DD
+                        time_format: false
+                        format: YYYY-MM-DD
+                        picker_utc: true
+                        required: false
+                        hint: Multi-day events only — keeps the race listed until this date passes.
+                      - { name: display, label: Printed date, widget: string, hint: "How the date is shown in the table, e.g. 2026-09-12/13" }
+                      - { name: event, label: Event, widget: string }
+                      - { name: venue, label: Venue, widget: string }
+                      - { name: distance, label: Distance, widget: string }
+                      - name: url
+                        label: Event website
+                        widget: string
+                        required: false
+                        pattern: ['^https?://', Must be a full URL starting with http(s)://]
+              - name: reading
+                label: Currently reading
+                widget: object
+                required: false
+                fields:
+                  - name: intro
+                    label: Intro
+                    widget: text
+                    required: false
+                    hint: "Optional line above the table. Supports **bold**, *italic*, `code` and [links](url)."
+                  - name: books
+                    label: Books
+                    widget: list
+                    required: false
+                    summary: "{{fields.title}} — {{fields.author}}"
+                    hint: The section is hidden on the site while this list is empty.
+                    fields:
+                      - { name: title, label: Title, widget: string }
+                      - { name: author, label: Author, widget: string }
+                      - name: url
+                        label: Link
+                        widget: string
+                        required: false
+                        pattern: ['^https?://', Must be a full URL starting with http(s)://]
+                        hint: PDF or bookstore page for the book.
+                      - name: source
+                        label: Link type
+                        widget: select
+                        required: false
+                        options: [pdf, bookstore, library]
+                        hint: Shown in the right-hand column.
+              - name: playing
+                label: Currently playing
+                widget: object
+                required: false
+                fields:
+                  - name: intro
+                    label: Intro
+                    widget: text
+                    required: false
+                    hint: "Optional line above the table. Supports **bold**, *italic*, `code` and [links](url)."
+                  - name: games
+                    label: Games
+                    widget: list
+                    required: false
+                    summary: "{{fields.title}}"
+                    hint: The section is hidden on the site while this list is empty.
+                    fields:
+                      - { name: title, label: Title, widget: string }
+                      - name: url
+                        label: Store page
+                        widget: string
+                        required: false
+                        pattern: ['^https?://', Must be a full URL starting with http(s)://]
+                      - { name: store, label: Store, widget: string, required: false, hint: "Shown in the right-hand column, e.g. Steam." }
+              - name: contact
+                label: Contact intro
+                widget: text

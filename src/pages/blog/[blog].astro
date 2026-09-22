@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Comments from "../../components/Comments.astro";
 import { getCollection, render } from "astro:content";
+import { fmtDate } from "../../scripts/date";
 import type { CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
@@ -15,6 +16,7 @@ export async function getStaticPaths() {
 type Props = { entry: CollectionEntry<"blog"> };
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const date = fmtDate(entry.data.date);
 const accent = entry.data.type === "personal" ? "personal" : "academic";
 const backLink = entry.data.type === "personal" ? "/blog/personal" : "/blog/tech";
 ---
@@ -24,7 +26,7 @@ const backLink = entry.data.type === "personal" ? "/blog/personal" : "/blog/tech
         <a href={backLink} class="font-mono text-xs text-muted hover:text-accent transition-colors duration-150 fade-in-up inline-block mb-6">← index</a>
         <h1 class="font-serif text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4 fade-in-up">{entry.data.title}</h1>
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-faint fade-in-up delay-100">
-            <time datetime={entry.data.date} class="tabular-nums">{entry.data.date}</time>
+            <time datetime={date} class="tabular-nums">{date}</time>
             {entry.data.tags && entry.data.tags.length > 0 && (
                 <span>{entry.data.tags.join(" · ")}</span>
             )}

@@ -9,24 +9,24 @@ const projects = await getCollection("projects");
 const featured = projects
     .filter((p: CollectionEntry<"projects">) => p.data.featured)
     .sort((a: CollectionEntry<"projects">, b: CollectionEntry<"projects">) =>
-        new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+        b.data.date.getTime() - a.data.date.getTime());
 
 const blogs = await getCollection("blog");
 const featuredBlogs = blogs
     .filter((b: CollectionEntry<"blog">) => b.data.featured)
     .sort((a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
-        new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+        b.data.date.getTime() - a.data.date.getTime());
 
 const tips = await getCollection("tips");
 tips.sort((a: CollectionEntry<"tips">, b: CollectionEntry<"tips">) =>
-    new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+    b.data.date.getTime() - a.data.date.getTime()
 );
 // Show the tip matching the build month; fall back to the most recent one.
 // A monthly scheduled rebuild in CI keeps this fresh (see .github/workflows/astro.yml).
 const now = new Date();
 const currentMonthTip = tips.find((t: CollectionEntry<"tips">) => {
-    const d = new Date(t.data.date);
-    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    const d = t.data.date;
+    return d.getUTCFullYear() === now.getUTCFullYear() && d.getUTCMonth() === now.getUTCMonth();
 });
 const latestTip = currentMonthTip ?? tips[0] ?? null;
 const tipLabel = currentMonthTip ? "Tip of the month" : "Latest tip";

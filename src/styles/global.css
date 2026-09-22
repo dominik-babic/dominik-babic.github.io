@@ -173,30 +173,74 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-mono);
 }
 
-/* Markdown images written on one line form a centered side-by-side row;
-   an italic paragraph directly after acts as its caption. */
-.prose p:has(> img + img) {
+/* Figures are built from markdown by a rehype plugin (see astro.config.mjs):
+   a paragraph of images becomes <figure><div>…</div></figure>, and an
+   italic-only paragraph right after it becomes the <figcaption>. */
+.prose figure {
+  margin: 1.5em 0;
+}
+
+.prose figure > div {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
 }
 
-.prose p:has(> img + img) img {
-  width: calc(50% - 0.5rem);
-  min-width: 240px;
+.prose figure img {
+  max-width: 100%;
   height: auto;
   margin: 0;
 }
 
-.prose p:has(> img + img) + p:has(> em:only-child) {
+/* Multi-image rows never wrap: each image takes an equal share of the line,
+   whatever the count. align-items keeps mixed-ratio images from stretching. */
+.prose figure:has(img + img) > div {
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.prose figure:has(img + img) img {
+  flex: 1 1 0%;
+  width: auto;
+  min-width: 0;
+}
+
+.prose figcaption {
   text-align: center;
   font-size: 0.875em;
   color: var(--faint);
   margin-top: 0.75em;
 }
 
+/* A figure indented inside a list item makes Markdown emit a "loose" list
+   (every item's text wrapped in <p>, which prose pads); keep bullets tight. */
+.prose ul > li > p:first-child,
+.prose ol > li > p:first-child {
+  margin-top: 0;
+}
+
+.prose ul > li > p:last-child,
+.prose ol > li > p:last-child,
+.prose ul > li > figure:last-child,
+.prose ol > li > figure:last-child {
+  margin-bottom: 0;
+}
+
 /* Inline code in frontmatter-rendered text (tip summaries, descriptions) */
+.md-inline strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.md-inline a {
+  color: var(--accent);
+}
+
+.md-inline a:hover {
+  text-decoration: underline;
+}
+
 .md-inline code {
   font-family: var(--font-mono);
   font-size: 0.85em;

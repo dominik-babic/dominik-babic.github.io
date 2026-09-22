@@ -11,7 +11,7 @@ const allBlogs = await getCollection("blog");
 const blogs = allBlogs
     .filter((b: BlogEntry) => b.data.type === "personal")
     .sort((a: BlogEntry, b: BlogEntry) =>
-        new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+        b.data.date.getTime() - a.data.date.getTime()
     );
 
 const allTags = [...new Set(blogs.flatMap((b: BlogEntry) => b.data.tags || []))].sort();

@@ -2,6 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ToggleNav from "../../components/ToggleNav.astro";
 import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+import { inlineMd } from "../../scripts/inlineMd";
+import { utcToday } from "../../scripts/date";
 import profileImg from "../../assets/img/personal_img.jpg";
 
 const toggleOptions = [
@@ -9,38 +12,30 @@ const toggleOptions = [
     { label: "Personal", href: "/about/personal" },
 ];
 
+// Copy lives in src/data/about.yaml so it can be edited without touching markup.
+const entry = await getEntry("about", "personal");
+if (!entry) throw new Error("Missing `personal` entry in src/data/about.yaml");
+const { tagline, intro, hobbies = [], races, reading, playing, contact } = entry.data;
+
 // Upcoming races — endDate keeps multi-day events listed until they're over;
 // past races drop out at build time (the site rebuilds monthly via CI cron).
-const races = [
-    {
-        date: "2026-09-12",
-        endDate: "2026-09-13",
-        display: "2026-09-12/13",
-        event: "Kup i ekipno prvenstvo Hrvatske (seniori/ke)",
-        venue: "Zagreb",
-        distance: "5000 m / 3000 m",
-    },
-    {
-        date: "2026-10-18",
-        display: "2026-10-18",
-        event: "Ljubljana Marathon",
-        venue: "Ljubljana",
-        distance: "Marathon",
-        url: "https://ljubljanskimaraton.si/en/",
-    },
-    {
-        date: "2027-03-07",
-        display: "2027-03-07",
-        event: "EDP Lisbon Half Marathon",
-        venue: "Lisbon",
-        distance: "Half Marathon",
-        url: "https://maratonaclubedeportugal.com/en/corrida-marco/edp-lisbon-half-marathon/",
-    },
-];
-const today = new Date().toISOString().slice(0, 10);
-const upcomingRaces = races
+const today = utcToday();
+const books = reading?.books ?? [];
+const games = playing?.games ?? [];
+const upcomingRaces = (races?.upcoming ?? [])
     .filter((r) => (r.endDate ?? r.date) >= today)
-    .sort((a, b) => a.date.localeCompare(b.date));
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+// Sections hide themselves when they have nothing to show, so the numbering in
+// the margin is derived rather than hard-coded — no gaps when one drops out.
+const shown = [
+    hobbies.length > 0 && "hobbies",
+    upcomingRaces.length > 0 && "races",
+    books.length > 0 && "reading",
+    games.length > 0 && "playing",
+    "contact",
+].filter((key): key is string => Boolean(key));
+const sectionNo = (key: string) => String(shown.indexOf(key) + 1).padStart(2, "0");
 ---
 <BaseLayout title="About — Dominik Babić" description="Runner, gamer, occasional reader. The side of the site that doesn't fit in a CV." accent="personal">
     <!-- Hero -->
@@ -62,43 +57,53 @@ const upcomingRaces = races
                     <ToggleNav options={toggleOptions} active="/about/personal" transitionName="about-toggle" class="self-center sm:self-auto" />
                 </div>
                 <p class="font-mono text-xs uppercase tracking-[0.2em] text-faint fade-in-up">
-                    runner · gamer · occasional reader
+                    {tagline}
                 </p>
             </div>
         </div>
 
         <div class="fade-in-up space-y-4 text-muted leading-relaxed">
-            <p>
-                This is the part of the page where I get to drop the résumé language. I'm Dominik — I write code for a
-                living, run competitively for fun, and spend more time thinking about both than I probably should.
-            </p>
-            <p>
-                I grew up in Croatia and have since lived and studied in Sweden, worked in the Czech Republic, and raced
-                across a good chunk of Europe. I like moving around, both literally and figuratively.
-            </p>
-            <p>
-                This side of the site is where I write about things that don't fit neatly into a CV — race reports,
-                trips, things I've been reading, things I've been thinking about.
-            </p>
+            {intro.map((paragraph) => (
+                <p class="md-inline" set:html={inlineMd(paragraph)} />
+            ))}
         </div>
     </div>
 
-    <!-- Running -->
-    <section class="mb-14">
-        <div class="flex items-baseline gap-3 mb-4 fade-in-up">
-            <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">01</span>
-            <h2 class="font-serif text-2xl font-semibold">Running</h2>
-            <div class="flex-1 border-b border-line self-center"></div>
-        </div>
-        <div class="fade-in-up">
-            <p class="text-muted leading-relaxed mb-6 max-w-[62ch]">
-                I'm a competitive middle- and long-distance runner, member of
-                <a href="https://www.akkvarner.hr/" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">AK Kvarner</a>.
-                I race distances from 400m to the marathon, mostly at Croatian and European competitions.
-            </p>
+    <!-- Hobbies -->
+    {hobbies.length > 0 && (
+        <section class="mb-14">
+            <div class="flex items-baseline gap-3 mb-4 fade-in-up">
+                <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">{sectionNo("hobbies")}</span>
+                <h2 class="font-serif text-2xl font-semibold">Hobbies</h2>
+                <div class="flex-1 border-b border-line self-center"></div>
+            </div>
+            <div class="fade-in-up divide-y divide-line border-b border-line">
+                {hobbies.map((hobby) => (
+                    <div class="py-5">
+                        <h3 class="font-serif text-lg font-semibold mb-1.5">{hobby.title}</h3>
+                        {hobby.text && (
+                            <p class="md-inline text-sm text-muted leading-relaxed" set:html={inlineMd(hobby.text)} />
+                        )}
+                    </div>
+                ))}
+            </div>
+        </section>
+    )}
 
-            <!-- Start list — upcoming races, styled like a competition schedule -->
-            {upcomingRaces.length > 0 ? (
+    <!-- Races -->
+    {upcomingRaces.length > 0 && (
+        <section class="mb-14">
+            <div class="flex items-baseline gap-3 mb-4 fade-in-up">
+                <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">{sectionNo("races")}</span>
+                <h2 class="font-serif text-2xl font-semibold">Races</h2>
+                <div class="flex-1 border-b border-line self-center"></div>
+            </div>
+            <div class="fade-in-up">
+                {races?.intro && (
+                    <p class="md-inline text-muted leading-relaxed mb-6 max-w-[62ch]" set:html={inlineMd(races.intro)} />
+                )}
+
+                <!-- Start list — upcoming races, styled like a competition schedule -->
                 <table class="w-full font-mono text-sm border-t border-line">
                     <caption class="sr-only">Upcoming races, sorted by date</caption>
                     <thead>
@@ -127,52 +132,114 @@ const upcomingRaces = races
                         ))}
                     </tbody>
                 </table>
-            ) : (
-                <p class="font-mono text-sm text-faint border-y border-line py-4">// no races on the calendar right now — check back soon</p>
-            )}
 
-            <div class="mt-6">
-                <a class="inline-flex items-center gap-2 px-4 py-2.5 border border-line rounded-xs font-mono text-xs text-ink hover:border-accent hover:text-accent transition-colors duration-150" href="https://strava.com/athletes/72844955" target="_blank" rel="noopener noreferrer">
-                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
-                    </svg>
-                    follow on strava ↗
-                </a>
+                <div class="mt-6">
+                    <a class="inline-flex items-center gap-2 px-4 py-2.5 border border-line rounded-xs font-mono text-xs text-ink hover:border-accent hover:text-accent transition-colors duration-150" href="https://strava.com/athletes/72844955" target="_blank" rel="noopener noreferrer">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
+                        </svg>
+                        follow on strava ↗
+                    </a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    )}
 
-    <!-- Outside running -->
-    <section class="mb-14">
-        <div class="flex items-baseline gap-3 mb-4 fade-in-up">
-            <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">02</span>
-            <h2 class="font-serif text-2xl font-semibold">Outside running</h2>
-            <div class="flex-1 border-b border-line self-center"></div>
-        </div>
-        <div class="fade-in-up divide-y divide-line border-b border-line">
-            <div class="py-5">
-                <h3 class="font-serif text-lg font-semibold mb-1.5">Gaming</h3>
-                <p class="text-sm text-muted leading-relaxed">Mostly FIFA, occasionally something else on Steam when a game catches my eye. Not a serious gamer — just something to switch off with.</p>
+    <!-- Currently reading -->
+    {books.length > 0 && (
+        <section class="mb-14">
+            <div class="flex items-baseline gap-3 mb-4 fade-in-up">
+                <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">{sectionNo("reading")}</span>
+                <h2 class="font-serif text-2xl font-semibold">Currently reading</h2>
+                <div class="flex-1 border-b border-line self-center"></div>
             </div>
-            <div class="py-5">
-                <h3 class="font-serif text-lg font-semibold mb-1.5">Reading</h3>
-                <p class="text-sm text-muted leading-relaxed">I read more non-fiction than fiction, mostly science, history, and the occasional biography. Thought it would make me a better writer. The jury's still out.</p>
+            <div class="fade-in-up">
+                {reading?.intro && (
+                    <p class="md-inline text-muted leading-relaxed mb-6 max-w-[62ch]" set:html={inlineMd(reading.intro)} />
+                )}
+
+                <!-- Reading list — same shape as the start list above -->
+                <table class="w-full font-mono text-sm border-t border-line">
+                    <caption class="sr-only">Books I am currently reading</caption>
+                    <thead>
+                        <tr class="text-left text-xs uppercase tracking-widest text-faint">
+                            <th scope="col" class="py-2.5 pr-4 font-medium">author</th>
+                            <th scope="col" class="py-2.5 pr-4 font-medium">title</th>
+                            <th scope="col" class="py-2.5 font-medium text-right">source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {books.map((book) => (
+                            <tr class="border-t border-line align-top">
+                                <td class="py-2.5 pr-4 text-faint">{book.author}</td>
+                                <td class="py-2.5 pr-4 text-ink">
+                                    {book.url ? (
+                                        <a href={book.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors duration-150">
+                                            {book.title} ↗
+                                        </a>
+                                    ) : (
+                                        book.title
+                                    )}
+                                </td>
+                                <td class="py-2.5 text-right text-muted">{book.source}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
-            <div class="py-5">
-                <h3 class="font-serif text-lg font-semibold mb-1.5">Travel</h3>
-                <p class="text-sm text-muted leading-relaxed">A lot of my travel is race-motivated — showing up in a new city, running a race, exploring the surroundings.</p>
+        </section>
+    )}
+
+    <!-- Currently playing -->
+    {games.length > 0 && (
+        <section class="mb-14">
+            <div class="flex items-baseline gap-3 mb-4 fade-in-up">
+                <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">{sectionNo("playing")}</span>
+                <h2 class="font-serif text-2xl font-semibold">Currently playing</h2>
+                <div class="flex-1 border-b border-line self-center"></div>
             </div>
-        </div>
-    </section>
+            <div class="fade-in-up">
+                {playing?.intro && (
+                    <p class="md-inline text-muted leading-relaxed mb-6 max-w-[62ch]" set:html={inlineMd(playing.intro)} />
+                )}
+
+                <table class="w-full font-mono text-sm border-t border-line">
+                    <caption class="sr-only">Games I am currently playing</caption>
+                    <thead>
+                        <tr class="text-left text-xs uppercase tracking-widest text-faint">
+                            <th scope="col" class="py-2.5 pr-4 font-medium">title</th>
+                            <th scope="col" class="py-2.5 font-medium text-right">store</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {games.map((game) => (
+                            <tr class="border-t border-line align-top">
+                                <td class="py-2.5 pr-4 text-ink">
+                                    {game.url ? (
+                                        <a href={game.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors duration-150">
+                                            {game.title} ↗
+                                        </a>
+                                    ) : (
+                                        game.title
+                                    )}
+                                </td>
+                                <td class="py-2.5 text-right text-muted">{game.store}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    )}
 
     <!-- Connect -->
     <section class="fade-in-up">
         <div class="flex items-baseline gap-3 mb-4">
-            <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">03</span>
+            <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">{sectionNo("contact")}</span>
             <h2 class="font-serif text-2xl font-semibold">Say hello</h2>
             <div class="flex-1 border-b border-line self-center"></div>
         </div>
-        <p class="text-muted leading-relaxed mb-6 max-w-[62ch]">Whether it's to talk running, life, or anything in between.</p>
+        <p class="md-inline text-muted leading-relaxed mb-6 max-w-[62ch]" set:html={inlineMd(contact)} />
         <div class="flex flex-wrap gap-3 font-mono text-xs">
             <a href="mailto:babic.dominik13@gmail.com" class="inline-flex items-center gap-2 px-4 py-2.5 border border-line rounded-xs text-ink hover:border-accent hover:text-accent transition-colors duration-150">
                 email

@@ -2,11 +2,12 @@
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import { inlineMd } from "../scripts/inlineMd";
+import { fmtDate } from "../scripts/date";
 
 export interface Props {
     title: string;
     description?: string;
-    date?: string;
+    date?: Date;
     tags?: string[];
     github?: string;
     link?: string;
@@ -41,7 +42,7 @@ const linked = Boolean(hasDetailPage && link);
                         <span class="text-ink">{title}</span>
                     )}
                 </h3>
-                {date && <time datetime={date} class="font-mono text-xs text-faint tabular-nums shrink-0">{date}</time>}
+                {date && <time datetime={fmtDate(date)} class="font-mono text-xs text-faint tabular-nums shrink-0">{fmtDate(date)}</time>}
             </div>
 
             {description && <p class="md-inline text-sm text-muted leading-relaxed mt-1.5 max-w-[62ch]" set:html={inlineMd(description)} />}

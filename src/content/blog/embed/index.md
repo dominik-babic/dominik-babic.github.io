@@ -1,7 +1,6 @@
 ---
 title: "Embedded: part 1"
 date: "2026-04-01"
-tags: ["Tech", "Personal"]
 description: "Also first part of my journey into embedded projects with ESP32-CAM."
 featured: true
 type: "tech"

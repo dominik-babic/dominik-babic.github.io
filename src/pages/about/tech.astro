@@ -3,12 +3,19 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import InfoCard from "../../components/InfoCard.astro";
 import ToggleNav from "../../components/ToggleNav.astro";
 import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+import { inlineMd } from "../../scripts/inlineMd";
 import profileImg from "../../assets/img/cv_nova_small.jpg";
 
 const toggleOptions = [
     { label: "Tech", href: "/about/tech" },
     { label: "Personal", href: "/about/personal" },
 ];
+
+// Copy lives in src/data/about.yaml so it can be edited without touching markup.
+const entry = await getEntry("about", "tech");
+if (!entry) throw new Error("Missing `tech` entry in src/data/about.yaml");
+const { tagline, intro, education = [], experience = [], skills, contact } = entry.data;
 ---
 <BaseLayout title="About — Dominik Babić" description="AI engineer and computer vision researcher with an MSc from the University of Zagreb and KTH.">
     <!-- Hero -->
@@ -30,28 +37,15 @@ const toggleOptions = [
                     <ToggleNav options={toggleOptions} active="/about/tech" transitionName="about-toggle" class="self-center sm:self-auto" />
                 </div>
                 <p class="font-mono text-xs uppercase tracking-[0.2em] text-faint fade-in-up">
-                    AI engineer · CV researcher · competitive runner
+                    {tagline}
                 </p>
             </div>
         </div>
 
         <div class="fade-in-up space-y-4 text-muted leading-relaxed">
-            <p>
-                I'm a machine learning engineer and cybersecurity enthusiast with a
-                <strong class="text-ink font-medium">Master's in Computer Science</strong> from the University of Zagreb
-                and KTH Royal Institute of Technology in Sweden. My work spans deep learning, computer vision and
-                security research — built up through research collaborations, hackathons, and independent projects.
-            </p>
-            <p>
-                Lately I've been moving into <strong class="text-ink font-medium">robotics and automation</strong>,
-                working with ROS and ROS 2. It's a natural extension of the AI background: bridging the gap between
-                intelligent algorithms and physical autonomous systems, especially where machine learning can improve
-                robotic perception and decision-making in the real world.
-            </p>
-            <p>
-                Away from the keyboard I'm a <strong class="text-ink font-medium">competitive middle- and long-distance runner</strong> —
-                racing everything from 400m to the marathon across the European running scene.
-            </p>
+            {intro.map((paragraph) => (
+                <p class="md-inline" set:html={inlineMd(paragraph)} />
+            ))}
         </div>
     </div>
 
@@ -63,28 +57,17 @@ const toggleOptions = [
             <div class="flex-1 border-b border-line self-center"></div>
         </div>
         <div class="fade-in-up space-y-8">
-            <InfoCard
-                institution="Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia"
-                degree="MSc in Computer Science"
-                specialization="Artificial Intelligence and Computer Vision"
-                list={["Top 2% of the generation, GPA 4.79/5.0.", "Relevant courses: Machine Learning, Pattern Recognition, Computer Vision, Deep Learning."]}
-                startDate="2023"
-                endDate="2025"
-            />
-            <InfoCard
-                institution="KTH Royal Institute of Technology, Sweden"
-                degree="MSc in Computer Science — Exchange"
-                list={["Collaborated on a reproducibility research paper: an in-depth exploration of Finite Scalar Quantization with VAEs.", "Relevant courses: Deep Learning Advanced, Security in Computer Systems, Reinforcement Learning."]}
-                startDate="2024"
-                endDate="2025"
-            />
-            <InfoCard
-                institution="Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia"
-                degree="BSc in Computer Science"
-                list={["Top 5% of the generation, GPA 4.54/5.0.", "Bachelor's thesis awarded the highest grade for research on Vector Quantized Variational Autoencoders (VQ-VAE)."]}
-                startDate="2020"
-                endDate="2023"
-            />
+            {education.map((item) => (
+                <InfoCard
+                    institution={item.organisation}
+                    degree={item.title}
+                    specialization={item.subtitle}
+                    description={item.description}
+                    list={item.list}
+                    startDate={item.startDate}
+                    endDate={item.endDate}
+                />
+            ))}
         </div>
     </section>
 
@@ -96,67 +79,44 @@ const toggleOptions = [
             <div class="flex-1 border-b border-line self-center"></div>
         </div>
         <div class="fade-in-up space-y-8">
-            <InfoCard
-                institution="Gideon Brothers d.o.o."
-                degree="Junior R&D Engineer"
-                description="Developing autonomous mobile robots, coordination algorithms, and simulation environments."
-                startDate="2025"
-                endDate="now"
-            />
-            <InfoCard
-                institution="Visual Recognition Group, CTU in Prague, Czech Republic"
-                degree="Deep Learning Researcher"
-                description="Researched detection of maliciously crafted image content; developed a novel method for detecting generated adversarial images with over 90% accuracy."
-                startDate="2025"
-                endDate="2025"
-            />
-            <InfoCard
-                institution="Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia"
-                degree="Teaching Assistant"
-                description="Facilitated exercises, graded assignments and exams, and mentored students across more than eight courses."
-                startDate="2023"
-                endDate="2025"
-            />
-            <InfoCard
-                institution="Syskit d.o.o."
-                degree="Full Stack Developer Intern"
-                description="Contributed to the development and maintenance of a SaaS React-based web and Microsoft Teams app."
-                startDate="2022"
-                endDate="2023"
-            />
+            {experience.map((item) => (
+                <InfoCard
+                    institution={item.organisation}
+                    degree={item.title}
+                    specialization={item.subtitle}
+                    description={item.description}
+                    list={item.list}
+                    startDate={item.startDate}
+                    endDate={item.endDate}
+                />
+            ))}
         </div>
     </section>
 
     <!-- Skills -->
-    <section class="mb-14">
-        <div class="flex items-baseline gap-3 mb-4 fade-in-up">
-            <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">03</span>
-            <h2 class="font-serif text-2xl font-semibold">Skills</h2>
-            <div class="flex-1 border-b border-line self-center"></div>
-        </div>
-        <div class="grid sm:grid-cols-2 gap-x-10 gap-y-6 fade-in-up">
-            <div>
-                <h3 class="font-mono text-xs uppercase tracking-widest text-faint mb-3">Focus</h3>
-                <ul class="space-y-1.5 text-sm text-muted">
-                    <li>Deep learning &amp; neural networks</li>
-                    <li>Computer vision</li>
-                    <li>Natural language processing</li>
-                    <li>Reinforcement learning</li>
-                    <li>Robotics &amp; automation</li>
-                </ul>
+    {skills && (
+        <section class="mb-14">
+            <div class="flex items-baseline gap-3 mb-4 fade-in-up">
+                <span class="font-mono text-xs text-pop tabular-nums" aria-hidden="true">03</span>
+                <h2 class="font-serif text-2xl font-semibold">Skills</h2>
+                <div class="flex-1 border-b border-line self-center"></div>
             </div>
-            <div>
-                <h3 class="font-mono text-xs uppercase tracking-widest text-faint mb-3">Toolbox</h3>
-                <ul class="space-y-1.5 font-mono text-sm text-muted">
-                    <li>Python · PyTorch · TensorFlow</li>
-                    <li>C++ · CUDA · OpenCV</li>
-                    <li>JavaScript · React · Node.js</li>
-                    <li>ROS 2 · Docker · AWS</li>
-                    <li>Git · Linux · security tooling</li>
-                </ul>
+            <div class="grid sm:grid-cols-2 gap-x-10 gap-y-6 fade-in-up">
+                <div>
+                    <h3 class="font-mono text-xs uppercase tracking-widest text-faint mb-3">Focus</h3>
+                    <ul class="space-y-1.5 text-sm text-muted">
+                        {skills.focus.map((item) => <li>{item}</li>)}
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-mono text-xs uppercase tracking-widest text-faint mb-3">Toolbox</h3>
+                    <ul class="space-y-1.5 font-mono text-sm text-muted">
+                        {skills.toolbox.map((item) => <li>{item}</li>)}
+                    </ul>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    )}
 
     <!-- Contact -->
     <section class="fade-in-up">
@@ -165,9 +125,7 @@ const toggleOptions = [
             <h2 class="font-serif text-2xl font-semibold">Contact</h2>
             <div class="flex-1 border-b border-line self-center"></div>
         </div>
-        <p class="text-muted leading-relaxed mb-6 max-w-[62ch]">
-            Whether you want to discuss opportunities, collaborate on a project, talk shop — or join me for a run — I'd love to connect.
-        </p>
+        <p class="md-inline text-muted leading-relaxed mb-6 max-w-[62ch]" set:html={inlineMd(contact)} />
         <div class="flex flex-wrap gap-3 font-mono text-xs">
             <a href="/assets/cv.pdf" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 border border-line rounded-xs text-ink hover:border-accent hover:text-accent transition-colors duration-150">
                 cv.pdf ↓

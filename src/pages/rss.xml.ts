@@ -4,7 +4,7 @@ import type { APIContext } from "astro";
 
 export async function GET(context: APIContext) {
   const blogs = await getCollection("blog");
-  blogs.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+  blogs.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   return rss({
     title: "Dominik Babić",
@@ -14,7 +14,7 @@ export async function GET(context: APIContext) {
     items: blogs.map((blog) => ({
       title: blog.data.title,
       description: blog.data.description,
-      pubDate: new Date(blog.data.date),
+      pubDate: blog.data.date,
       link: `/blog/${blog.id}/`,
     })),
   });
