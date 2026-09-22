@@ -1,67 +1,67 @@
 tech:
-  tagline: AI engineer · CV researcher · competitive runner
+  tagline: "AI engineer · CV researcher · competitive runner"
   intro:
-    - I'm a machine learning engineer and cybersecurity enthusiast with a **Master's in Computer Science** from the University of Zagreb and KTH Royal Institute of Technology in Sweden. My work spans deep learning, computer vision and security research — built up through research collaborations, hackathons, and independent projects.
+    - "I'm a machine learning engineer and cybersecurity enthusiast with a **Master's in Computer Science** from the University of Zagreb and KTH Royal Institute of Technology in Sweden. My work spans deep learning, computer vision and security research — built up through research collaborations, hackathons, and independent projects."
     - "Lately I've been moving into **robotics and automation**, working with ROS and ROS 2. It's a natural extension of the AI background: bridging the gap between intelligent algorithms and physical autonomous systems, especially where machine learning can improve robotic perception and decision-making in the real world."
-    - Away from the keyboard I'm a **competitive middle- and long-distance runner** — racing everything from 400m to the marathon across the European running scene.
+    - "Away from the keyboard I'm a **competitive middle- and long-distance runner** — racing everything from 400m to the marathon across the European running scene."
   education:
-    - title: MSc in Computer Science
-      organisation: Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia
-      subtitle: Artificial Intelligence and Computer Vision
+    - title: "MSc in Computer Science"
+      organisation: "Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia"
+      subtitle: "Artificial Intelligence and Computer Vision"
       list:
-        - Top 2% of the generation, GPA 4.79/5.0.
-        - 'Relevant courses: Machine Learning, Pattern Recognition, Computer Vision, Deep Learning.'
-      startDate: '2023'
-      endDate: '2025'
-    - title: MSc in Computer Science — Exchange
-      organisation: KTH Royal Institute of Technology, Sweden
+        - "Top 2% of the generation, GPA 4.79/5.0."
+        - "Relevant courses: Machine Learning, Pattern Recognition, Computer Vision, Deep Learning."
+      startDate: "2023"
+      endDate: "2025"
+    - title: "MSc in Computer Science — Exchange"
+      organisation: "KTH Royal Institute of Technology, Sweden"
       list:
-        - 'Collaborated on a reproducibility research paper: an in-depth exploration of Finite Scalar Quantization with VAEs.'
-        - 'Relevant courses: Deep Learning Advanced, Security in Computer Systems, Reinforcement Learning.'
-      startDate: '2024'
-      endDate: '2025'
-    - title: BSc in Computer Science
-      organisation: Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia
+        - "Collaborated on a reproducibility research paper: an in-depth exploration of Finite Scalar Quantization with VAEs."
+        - "Relevant courses: Deep Learning Advanced, Security in Computer Systems, Reinforcement Learning."
+      startDate: "2024"
+      endDate: "2025"
+    - title: "BSc in Computer Science"
+      organisation: "Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia"
       list:
-        - Top 5% of the generation, GPA 4.54/5.0.
-        - Bachelor's thesis awarded the highest grade for research on Vector Quantized Variational Autoencoders (VQ-VAE).
-      startDate: '2020'
-      endDate: '2023'
+        - "Top 5% of the generation, GPA 4.54/5.0."
+        - "Bachelor's thesis awarded the highest grade for research on Vector Quantized Variational Autoencoders (VQ-VAE)."
+      startDate: "2020"
+      endDate: "2023"
   experience:
-    - title: Junior R&D Engineer
-      organisation: Gideon Brothers d.o.o.
-      description: Developing autonomous mobile robots, coordination algorithms, and simulation environments.
-      startDate: '2025'
-      endDate: now
-    - title: Deep Learning Researcher
-      organisation: Visual Recognition Group, CTU in Prague, Czech Republic
-      description: Researched detection of maliciously crafted image content; developed a novel method for detecting generated adversarial images with over 90% accuracy.
-      startDate: '2025'
-      endDate: '2025'
-    - title: Teaching Assistant
-      organisation: Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia
-      description: Facilitated exercises, graded assignments and exams, and mentored students across more than eight courses.
-      startDate: '2023'
-      endDate: '2025'
-    - title: Full Stack Developer Intern
-      organisation: Syskit d.o.o.
-      description: Contributed to the development and maintenance of a SaaS React-based web and Microsoft Teams app.
-      startDate: '2022'
-      endDate: '2023'
+    - title: "Junior R&D Engineer"
+      organisation: "Gideon Brothers d.o.o."
+      description: "Developing autonomous mobile robots, coordination algorithms, and simulation environments."
+      startDate: "2025"
+      endDate: "now"
+    - title: "Deep Learning Researcher"
+      organisation: "Visual Recognition Group, CTU in Prague, Czech Republic"
+      description: "Researched detection of maliciously crafted image content; developed a novel method for detecting generated adversarial images with over 90% accuracy."
+      startDate: "2025"
+      endDate: "2025"
+    - title: "Teaching Assistant"
+      organisation: "Faculty of Electrical Engineering and Computing, University of Zagreb, Croatia"
+      description: "Facilitated exercises, graded assignments and exams, and mentored students across more than eight courses."
+      startDate: "2023"
+      endDate: "2025"
+    - title: "Full Stack Developer Intern"
+      organisation: "Syskit d.o.o."
+      description: "Contributed to the development and maintenance of a SaaS React-based web and Microsoft Teams app."
+      startDate: "2022"
+      endDate: "2023"
   skills:
     focus:
-      - Deep learning & neural networks
-      - Computer vision
-      - Natural language processing
-      - Reinforcement learning
-      - Robotics & automation
+      - "Deep learning & neural networks"
+      - "Computer vision"
+      - "Natural language processing"
+      - "Reinforcement learning"
+      - "Robotics & automation"
     toolbox:
-      - Python · PyTorch · TensorFlow
-      - C++ · CUDA · OpenCV
-      - JavaScript · React · Node.js
-      - ROS 2 · Docker · AWS
-      - Git · Linux · security tooling
-  contact: Whether you want to discuss opportunities, collaborate on a project, talk shop — or join me for a run — I'd love to connect.
+      - "Python · PyTorch · TensorFlow"
+      - "C++ · CUDA · OpenCV"
+      - "JavaScript · React · Node.js"
+      - "ROS 2 · Docker · AWS"
+      - "Git · Linux · security tooling"
+  contact: "Whether you want to discuss opportunities, collaborate on a project, talk shop — or join me for a run — I'd love to connect."
 personal:
   tagline: "runner · gamer · occasional reader"
   intro:
@@ -72,14 +72,22 @@ personal:
     - title: "Running"
       text: "I'm a competitive middle- and long-distance runner, member of [AK Kvarner](https://www.akkvarner.hr/). I race distances from 400m to the marathon, mostly at Croatian and European competitions."
     - title: "Cycling"
+      text: "I bought my first gravel bike few months ago, and now I can't stop thinking about all the bikepacking ideas and rides I would like to do."
     - title: "Gaming"
-      text: "Mostly FIFA, occasionally something else on Steam when a game catches my eye. Not a serious gamer — just something to switch off with."
+      text: "Mostly FIFA, occasionally something else on Steam when a game catches my eye. Not such a serious gamer — just something to switch off with."
     - title: "Reading"
-      text: "I read more non-fiction than fiction, mostly science, history, and the occasional biography. Thought it would make me a better writer. The jury's still out."
+      text: "I read more non-fiction than fiction, mostly research articles and books, self-improvement and some classics, like Kafka and similar. Thought it would make me a better writer. The jury's still out."
     - title: "Travel"
       text: "A lot of my travel is race-motivated — showing up in a new city, running a race, exploring the surroundings."
   races:
+    intro: "Some of the planned future races that I have signed up for."
     upcoming:
+      - date: "2026-10-01"
+        display: "2026-10-01"
+        event: "B2Run"
+        venue: "Zagreb - Jarun"
+        distance: "5k"
+        url: "https://www.b2run.hr/"
       - date: "2026-10-18"
         display: "2026-10-18"
         event: "Ljubljana Marathon"
@@ -99,6 +107,4 @@ personal:
         author: "Nathan Lambert"
         url: "https://rlhfbook.com/"
         source: "pdf"
-  playing:
-    games: []
   contact: "Whether it's to talk running, life, or anything in between."
