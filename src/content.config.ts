@@ -73,6 +73,9 @@ const infoCard = z.object({
   endDate: text,
 });
 
+/** The contact buttons an About page can show; targets live in src/data/contact.yaml */
+const contactLinks = ["cv", "email", "linkedin", "github", "strava"] as const;
+
 /**
  * Copy for the two About pages, one entry per page ("tech" / "personal").
  * Prose fields hold inline markdown, rendered with inlineMd().
@@ -82,7 +85,12 @@ const about = defineCollection({
   schema: z.object({
     tagline: z.string(),
     intro: z.array(z.string()),
-    contact: z.string(),
+    contact: z.object({
+      title: z.string(),
+      intro: z.string(),
+      /** Buttons to show, in this order */
+      links: z.array(z.enum(contactLinks)).default([]),
+    }),
     /* tech page */
     education: z.array(infoCard).optional(),
     experience: z.array(infoCard).optional(),
@@ -127,8 +135,22 @@ const about = defineCollection({
   }),
 });
 
+/** Targets for the contact buttons — a single `links` entry in src/data/contact.yaml */
+const contact = defineCollection({
+  loader: file("src/data/contact.yaml"),
+  schema: z.object({
+    /** Public path of the uploaded CV, e.g. /assets/cv.pdf */
+    cv: z.string(),
+    email: z.string().email(),
+    linkedin: z.string().url(),
+    github: z.string().url(),
+    strava: z.string().url(),
+  }),
+});
+
 export const collections = {
   about,
+  contact,
   blog,
   projects,
   tips,

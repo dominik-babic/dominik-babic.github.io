@@ -1,0 +1,48 @@
+---
+import { getEntry } from "astro:content";
+
+/**
+ * The row of contact buttons at the bottom of an About page. Which buttons show
+ * (and in what order) comes from the page's `contact.links` in about.yaml; where
+ * they point comes from src/data/contact.yaml.
+ */
+interface Props {
+    links: ("cv" | "email" | "linkedin" | "github" | "strava")[];
+    /** Page accent — Strava keeps its orange hover on either page */
+    accent?: "academic" | "personal";
+}
+
+const { links, accent = "academic" } = Astro.props;
+
+const entry = await getEntry("contact", "links");
+if (!entry) throw new Error("Missing `links` entry in src/data/contact.yaml");
+const targets = entry.data;
+
+const base = "inline-flex items-center gap-2 px-4 py-2.5 border border-line rounded-xs text-ink transition-colors duration-150";
+const hover = "hover:border-accent hover:text-accent";
+const orangeHover = accent === "personal" ? hover : "hover:border-pop hover:text-pop";
+const external = { target: "_blank", rel: "noopener noreferrer" };
+---
+<div class="flex flex-wrap gap-3 font-mono text-xs">
+    {links.map((link) => {
+        switch (link) {
+            case "cv":
+                return <a href={targets.cv} target="_blank" class:list={[base, hover]}>cv.pdf ↓</a>;
+            case "email":
+                return <a href={`mailto:${targets.email}`} class:list={[base, hover]}>email</a>;
+            case "linkedin":
+                return <a href={targets.linkedin} {...external} class:list={[base, hover]}>linkedin ↗</a>;
+            case "github":
+                return <a href={targets.github} {...external} class:list={[base, hover]}>github ↗</a>;
+            case "strava":
+                return (
+                    <a href={targets.strava} {...external} class:list={[base, orangeHover]}>
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
+                        </svg>
+                        strava ↗
+                    </a>
+                );
+        }
+    })}
+</div>

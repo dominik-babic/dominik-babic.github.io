@@ -61,7 +61,15 @@ tech:
       - "JavaScript · React · Node.js"
       - "ROS 2 · Docker · AWS"
       - "Git · Linux · security tooling"
-  contact: "Whether you want to discuss opportunities, collaborate on a project, talk shop — or join me for a run — I'd love to connect."
+  contact:
+    title: "Contact"
+    intro: "Whether you want to discuss opportunities, collaborate on a project, talk shop — or join me for a run — I'd love to connect."
+    links:
+      - "cv"
+      - "email"
+      - "linkedin"
+      - "github"
+      - "strava"
 personal:
   tagline: "runner · gamer · occasional reader"
   intro:
@@ -107,4 +115,9 @@ personal:
         author: "Nathan Lambert"
         url: "https://rlhfbook.com/"
         source: "pdf"
-  contact: "Whether it's to talk running, life, or anything in between."
+  contact:
+    title: "Say hello"
+    intro: "Whether it's to talk running, life, or anything in between."
+    links:
+      - "email"
+      - "strava"

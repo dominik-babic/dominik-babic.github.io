@@ -260,7 +260,7 @@ collections:
         label: About
         file: src/data/about.yaml
         format: yaml
-        description: Copy for /about/tech and /about/personal. Section headings and the contact buttons live in the page markup.
+        description: Copy for /about/tech and /about/personal. Section headings other than Contact live in the page markup.
         fields:
           - name: tech
             label: Tech side
@@ -318,8 +318,26 @@ collections:
                     widget: list
                     field: { name: item, label: Item, widget: string }
               - name: contact
-                label: Contact intro
-                widget: text
+                label: Contact
+                widget: object
+                fields:
+                  - { name: title, label: Heading, widget: string }
+                  - name: intro
+                    label: Intro
+                    widget: text
+                    hint: "Supports **bold**, *italic*, `code` and [links](url)."
+                  - name: links
+                    label: Buttons
+                    widget: select
+                    multiple: true
+                    required: false
+                    options:
+                      - { label: CV download, value: cv }
+                      - { label: Email, value: email }
+                      - { label: LinkedIn, value: linkedin }
+                      - { label: GitHub, value: github }
+                      - { label: Strava, value: strava }
+                    hint: Shown in the order picked. Where each one points is set under Pages → Contact links.
           - name: personal
             label: Personal side
             widget: object
@@ -441,5 +459,55 @@ collections:
                         pattern: ['^https?://', Must be a full URL starting with http(s)://]
                       - { name: store, label: Store, widget: string, required: false, hint: "Shown in the right-hand column, e.g. Steam." }
               - name: contact
-                label: Contact intro
-                widget: text
+                label: Contact
+                widget: object
+                fields:
+                  - { name: title, label: Heading, widget: string }
+                  - name: intro
+                    label: Intro
+                    widget: text
+                    hint: "Supports **bold**, *italic*, `code` and [links](url)."
+                  - name: links
+                    label: Buttons
+                    widget: select
+                    multiple: true
+                    required: false
+                    options:
+                      - { label: CV download, value: cv }
+                      - { label: Email, value: email }
+                      - { label: LinkedIn, value: linkedin }
+                      - { label: GitHub, value: github }
+                      - { label: Strava, value: strava }
+                    hint: Shown in the order picked. Where each one points is set under Pages → Contact links.
+      - name: contact
+        label: Contact links
+        file: src/data/contact.yaml
+        format: yaml
+        description: Where the contact buttons on the About pages point. Each About page picks which buttons it shows.
+        fields:
+          - name: links
+            label: Links
+            widget: object
+            collapsed: false
+            fields:
+              - name: cv
+                label: CV
+                widget: file
+                accept: application/pdf
+                hint: Upload the new PDF here to replace the one the CV button downloads. The old file stays in public/assets until you delete it.
+              - name: email
+                label: Email address
+                widget: string
+                pattern: ['^[^@\s]+@[^@\s]+\.[^@\s]+$', Must be an email address]
+              - name: linkedin
+                label: LinkedIn
+                widget: string
+                pattern: ['^https?://', Must be a full URL starting with http(s)://]
+              - name: github
+                label: GitHub
+                widget: string
+                pattern: ['^https?://', Must be a full URL starting with http(s)://]
+              - name: strava
+                label: Strava
+                widget: string
+                pattern: ['^https?://', Must be a full URL starting with http(s)://]

@@ -1,0 +1,8 @@
+# Where each contact button points. Shared by both About pages, which pick the
+# buttons they show in src/data/about.yaml. Edited in the CMS under Pages → Contact links.
+links:
+  cv: "/assets/cv.pdf"
+  email: "babic.dominik13@gmail.com"
+  linkedin: "https://www.linkedin.com/in/dominik-babić/"
+  github: "https://github.com/dominik-babic"
+  strava: "https://www.strava.com/athletes/72844955"
