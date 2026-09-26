@@ -5,8 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Content — Dominik Babić</title>
+    <!--
+      Full-screen toggle for markdown fields. Sveltia has no built-in one, so a
+      button is added next to the label of every markdown field and pins that
+      field over the whole window. Esc or the button again restores it. Relies
+      on Sveltia's `.field[data-field-type] > header > h4` markup — if a CMS
+      update changes that, the button just stops appearing.
+    -->
+    <style>
+      .cms-fs-toggle {
+        margin-inline-start: 8px;
+        padding: 2px 8px;
+        border: 1px solid var(--sui-secondary-border-color, #8884);
+        border-radius: 4px;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: var(--sui-font-size-small, 12px);
+        cursor: pointer;
+        opacity: 0.7;
+      }
+      .cms-fs-toggle:hover {
+        opacity: 1;
+      }
+      .field.cms-fs {
+        position: fixed !important;
+        inset: 0;
+        z-index: 10000;
+        margin: 0 !important;
+        padding: 16px 24px !important;
+        overflow: auto;
+        background: var(--sui-primary-background-color, #fff);
+      }
+      .field.cms-fs textarea,
+      .field.cms-fs [contenteditable="true"] {
+        min-height: calc(100vh - 140px) !important;
+      }
+      html:has(.field.cms-fs) {
+        overflow: hidden;
+      }
+    </style>
   </head>
   <body>
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <script>
+      (() => {
+        const FIELDS = '.field:is([data-field-type="markdown"], [data-field-type="richtext"])';
+
+        const setFullscreen = (field, on) => {
+          field.classList.toggle('cms-fs', on);
+          const button = field.querySelector(':scope > header .cms-fs-toggle');
+          if (button) button.textContent = on ? 'Exit full screen' : 'Full screen';
+        };
+
+        const addToggles = () => {
+          for (const field of document.querySelectorAll(FIELDS)) {
+            const label = field.querySelector(':scope > header > h4');
+            if (!label || label.parentElement.querySelector('.cms-fs-toggle')) continue;
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'cms-fs-toggle';
+            button.textContent = 'Full screen';
+            button.addEventListener('click', () =>
+              setFullscreen(field, !field.classList.contains('cms-fs')),
+            );
+            label.after(button);
+          }
+        };
+
+        new MutationObserver(addToggles).observe(document.body, { childList: true, subtree: true });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key !== 'Escape') return;
+          const open = document.querySelector('.field.cms-fs');
+          if (!open) return;
+          event.stopPropagation();
+          setFullscreen(open, false);
+        }, true);
+      })();
+    </script>
   </body>
 </html>
