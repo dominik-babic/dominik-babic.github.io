@@ -5,7 +5,7 @@ type: "personal"
 description: "Training notes from a training camp on Rogla (17.08-23.08)"
 tags:
   - "Running"
-featured: false
+featured: true
 image: "./img/1000032589.jpg"
 ---
 
