@@ -3,7 +3,10 @@ title: "Training camp Rogla"
 date: "2026-08-17"
 type: "personal"
 description: "Training notes from a training camp on Rogla (17.08-23.08)"
+tags:
+  - "Running"
 featured: false
+image: "./img/1000032589.jpg"
 ---
 
 From 17.08 until 23.08, I'll be training at the Rogla ski resort, which is at an altitude of around 1450m, together with the rest of the long-distance team from AK Kvarner and also some professional triathlon athletes from Rijeka and other places. I plan to use this as some sort of training diary or note-taking, whatever sounds like I pretend to be a wannabe pro. 
