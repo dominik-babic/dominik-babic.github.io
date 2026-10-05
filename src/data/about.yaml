@@ -90,12 +90,6 @@ personal:
   races:
     intro: "Some of the planned future races that I have signed up for."
     upcoming:
-      - date: "2026-10-01"
-        display: "2026-10-01"
-        event: "B2Run"
-        venue: "Zagreb - Jarun"
-        distance: "5k"
-        url: "https://www.b2run.hr/"
       - date: "2026-10-18"
         display: "2026-10-18"
         event: "Ljubljana Marathon"
@@ -108,6 +102,17 @@ personal:
         venue: "Lisbon"
         distance: "Half Marathon"
         url: "https://maratonaclubedeportugal.com/en/corrida-marco/edp-lisbon-half-marathon/"
+      - date: "2026-10-31"
+        display: "2026-10-31"
+        event: "Nationals Road Championship"
+        venue: "Zaprešić"
+        distance: "10k"
+      - date: "2026-11-08"
+        display: "2026-11-08"
+        event: "Zalando Zagrebački Noćni Cener"
+        venue: "Zagreb"
+        distance: "10k"
+        url: "https://www.zagreb.run/utrke/zalando-zagrebacki-nocni-cener/15-zalando-zagrebacki-nocni-cener-informacije-o-utrci/"
   reading:
     intro: "What's on the nightstand right now."
     books:
