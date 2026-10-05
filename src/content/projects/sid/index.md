@@ -46,6 +46,8 @@ To tackle this problem, researchers have developed various architectures and tec
 
 That said, the field of generative models is vast and complex, and there are many architectures and techniques that have been developed. The ones I mentioned are just a few examples, and there are many more out there. There's a lot of mathematics and theory behind these models, but I won't go into that in this article. If you're interested in learning more about the theory and mathematics behind generative models, I recommend that you check out some resources I will link at the end of this article, and my master's thesis, as well. :)
 
+One thing that's common today in the generative models that is used to differentiate real and generated content is **watermarking** - a process of inserting a distinguishable signature into content that may or may not be detectable to the human eye, but is used to distinguish the properties of a content. Watermarking was initially used to sign content to define the ownership; if you ever went to a photography studio, until you paid for your image, they would have a logo watermarked over it. That same principle is used to insert the signature of generative models, so that anyone verifying authenticity of content can look for those signature, if none are present, the content is probably real.
+
 ## Synthetic Image Detection - or just "Detection of generated images"
 
 I'll first start by saying that this name is just a fancy and smart way to say "Detection of generated images". With the name of _SID_, you encompass a large group of methods that can be used for the task of detecting generated images, explaining the features of the images that can be used for detection, and also explaining the techniques that can be used to extract those features. The field of _SID_ is still new; at least it was new when I started working on it, and there are still many open questions and challenges that need to be addressed.
@@ -129,7 +131,7 @@ In case it did, there's more to read about it in my own thesis linked at the end
 
 - It's gonna get harder and harder to distinguish real images, videos, and other types of content from the generated ones. This is a game of cat and mouse.
 - **Thinking out-of-the-box** is critical, as there isn't a standard pattern to solving this problem, and unfortunately, there won't be, as there is no way to prove that a certain solution works with perfect accuracy.
-- There's no standard approach for this problem, and this article isn't here to define a process, but to display ideas that incorporate the fundamentals of SID. 
+- There's no standard approach for this problem, and this article isn't here to define a process, but to display ideas that incorporate the fundamentals of SID.
 
 ## References
 
