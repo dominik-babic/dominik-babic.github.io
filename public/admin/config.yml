@@ -175,6 +175,7 @@ collections:
         label: Write-up
         widget: markdown
         modes: [raw, rich_text]
+        required: false
 
   # ---------------------------------------------------------------------------
   # Tips — one per month, src/content/tips/YYYY-MM.md
