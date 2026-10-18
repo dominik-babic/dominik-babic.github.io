@@ -13,7 +13,7 @@ As I'm recovering back at my warn apartment after running my first ever marathon
 
 Even tho I've been running for almost 10 years, most of that time was spent on training for sprint to middle distance races (400m, 800m and 1500m), so running anything above 10k was never even in consideration for a session. But for the last two years, I have taken upon myself to start doing some longer session and from there, my love for road races started.
 
-##### Preparation 
+#### Preparation 
 
 So, once I registered to a marathon last year, I had no training plans for it, and to be quiet honest, neither did I have until last two weeks. I was training, but mostly for 1500m, 5k and 10k maybe, so I had some baseline with some long runs. There isn't one session that really helped me to get prepared for a marathon, since most of my sessions are focused on faster pace runs, but those still built my endurance, which I do see as a big plus. Also, long runs got me prepared for a controling a pace over a longer period.
 
@@ -26,7 +26,7 @@ Main things that I would say that matter during the preparation for a marathon i
 
 I know these aren't training plans and some concrete training sessions, but I don't think my sessions are good examples for the marathon block. With that said, some of the free ways to get into running without the need to do the planning by yourself are running groups; there are a numerous running groups everywhere where people gather both to socialise and train (example Adidas Runners Zagreb has free training).
 
-##### Before the race
+#### Before the race
 
 Nutrition and hydration is important, so few days before the race, it is important to load yourself with carbohydrates. That means pasta, rice, pizza (but without anything spicy) is a big plus.
 
@@ -36,7 +36,7 @@ Another important part are electrolytes, which will lower your chances to cramp 
 
 For instance, I bought a pack of gels from 4Endurance that contain each 45mg of carbohydrate and are filled with electrolytes. That way, I had covered both problems. Since I was planning on running under 3 hours, I packed 4 of those gels and took each one at the interval of 35 minutes.
 
-##### The run
+#### The run
 
 The most important rule you have to follow is: **Don't start out fast!** That should sound reasonable, but it still worth mentioning. Usually the common plan should be to run the first half around 5 seconds slower that the targeted pace, maybe even slower. The point is to get the feel of the run and start out without over-pushing yourself too much.
 
